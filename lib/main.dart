@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'components/custom_search_bar.dart'; // Importa el archivo que creaste
+import 'screens/anime_catalog_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,15 +36,24 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
         brightness: Brightness.dark,
       ),
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light, // Alterna entre temas
-      home: MyHomePage(title: 'TuneSphere', toggleTheme: _toggleTheme, isDarkMode: _isDarkMode),
+      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: MyHomePage(
+        title: 'TuneSphere',
+        toggleTheme: _toggleTheme,
+        isDarkMode: _isDarkMode,
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title, required this.toggleTheme, required this.isDarkMode});
+  const MyHomePage({
+    super.key,
+    required this.title,
+    required this.toggleTheme,
+    required this.isDarkMode,
+  });
 
   final String title;
   final Function toggleTheme;
@@ -57,86 +68,70 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title), // Solo el título en el AppBar
+        title: Text(widget.title),
         actions: [
           IconButton(
-            icon: Icon(widget.isDarkMode ? Icons.light_mode : Icons.dark_mode), // Ícono de alternar tema
+            icon: Icon(widget.isDarkMode ? Icons.light_mode : Icons.dark_mode),
             onPressed: () {
-              widget.toggleTheme(); // Alternar el tema cuando se presiona el botón
+              widget.toggleTheme();
             },
           ),
         ],
-        backgroundColor: const Color(0xFFFEA500), // Color #FEA en hexadecimal
-        elevation: 4, // Añadir sombra en la parte inferior del AppBar
-        shadowColor: Colors.black.withOpacity(0.5), // Sombra negra con opacidad del 50%
+        backgroundColor: const Color(0xFFFEA500),
+        elevation: 4,
+        shadowColor: Colors.black.withOpacity(0.5),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Icono de inicio de sesión
-                IconButton(
-                  icon: const Icon(Icons.account_circle, size: 32),
-                  onPressed: () {
-                    // Acción para iniciar sesión
-                    print('Inicio de sesión');
-                  },
-                ),
-                // Tres botones con borderRadius de 20px
-                _buildCustomButton('Todo'),
-                const SizedBox(width: 8),
-                _buildCustomButton('Musica'),
-                const SizedBox(width: 8),
-                _buildCustomButton('Podcast'),
-                const SizedBox(width: 16),
-              ],
-            ),
-            // Barra de búsqueda
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0, top: 20),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Buscar...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  prefixIcon: Icon(Icons.search),
-                ),
-              ),
-            ),
-          ),
+            _buildHeader(),
             const SizedBox(height: 16),
-            // Resto del contenido del cuerpo
-            const Center(
-              child: Text('Contenido de la aplicación aquí'),
-            ),
+            const CustomSearchBar(),
+            const SizedBox(height: 16),
+            Expanded(child: AnimeCatalogPage()), // Integrar la página de catálogo aquí
           ],
         ),
       ),
     );
   }
 
-  // Método para construir botones personalizados con borde redondeado
+  Widget _buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.account_circle, size: 32),
+          onPressed: () {
+            print('Inicio de sesión');
+          },
+        ),
+        const SizedBox(width: 8),
+        _buildCustomButton('Anime'),
+        const SizedBox(width: 8),
+        _buildCustomButton('Peliculas'),
+        const SizedBox(width: 8),
+        _buildCustomButton('Musica'),
+      ],
+    );
+  }
+
   Widget _buildCustomButton(String text) {
     return ElevatedButton(
       onPressed: () {
-        // Acción del botón
+        print('$text button pressed');
       },
       child: Text(
         text,
-        style: const TextStyle(color: Colors.white), // Texto blanco
+        style: const TextStyle(color: Colors.white),
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF10375C), // Color de fondo personalizado
+        backgroundColor: const Color(0xFFFEA500),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20), // Borde redondeado de 20px
+          borderRadius: BorderRadius.circular(20),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Espaciado interno del botón
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
     );
   }
